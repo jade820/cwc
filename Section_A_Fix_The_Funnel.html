@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section A: Fix the Funnel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#26401B;
+    --dark:#13260E;
+    --chart:#D6D98B;
+    --sand:#EBE4DC;
+    --off:#F8F7F2;
+    --leak:#A6472E;      /* warm brick, the one bold accent, used only for the leak + risk */
+    --leak-soft:#EFD9D1;
+    --ink:#25301F;
+    --muted:#6a7360;
+    --line:#d8d3c7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Open Sans',system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--off);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px}
+
+  /* ---------- masthead ---------- */
+  .masthead{background:var(--dark);color:var(--off);padding:60px 0 54px}
+  .eyebrow{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--chart);font-weight:600}
+  .masthead h1{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;font-size:clamp(40px,7vw,68px);
+    line-height:1.02;margin:14px 0 16px;letter-spacing:-.01em;
+  }
+  .masthead p{max-width:60ch;color:#d6d9c9;font-size:16.5px}
+  .masthead .tag{display:inline-block;margin-top:22px;font-size:12.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:#aeb79b;border-top:1px solid #3a4a2e;padding-top:14px}
+
+  /* ---------- section scaffolding ---------- */
+  section{padding:64px 0}
+  section + section{border-top:1px solid var(--line)}
+  .snum{font-family:'Open Sans';font-size:13px;font-weight:700;letter-spacing:.22em;
+    color:var(--leak);text-transform:uppercase}
+  .stitle{font-family:'Cormorant Garamond',serif;font-weight:600;
+    font-size:clamp(28px,4.4vw,40px);line-height:1.08;margin:8px 0 10px;color:var(--forest)}
+  .slead{max-width:64ch;color:var(--muted);font-size:16px;margin-bottom:34px}
+
+  /* ---------- the funnel (hero thesis) ---------- */
+  .funnel{display:flex;flex-direction:column;align-items:center;gap:0}
+  .stage{width:100%;text-align:center;color:var(--off);padding:22px 20px;position:relative}
+  .s1{background:var(--forest);max-width:100%;clip-path:polygon(0 0,100% 0,88% 100%,12% 100%)}
+  .s2{background:#3a5a2a;max-width:100%;clip-path:polygon(12% 0,88% 0,72% 100%,28% 100%);margin-top:-1px}
+  .s3{background:var(--leak);max-width:100%;clip-path:polygon(28% 0,72% 0,60% 100%,40% 100%);margin-top:-1px;padding-bottom:26px}
+  .stage .big{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,5vw,46px);font-weight:700;line-height:1;display:block}
+  .stage .lbl{font-size:13.5px;letter-spacing:.04em;margin-top:6px;opacity:.95}
+  .stage .sub{font-size:12px;opacity:.75;margin-top:2px}
+  .leaknote{max-width:520px;margin:20px auto 0;background:var(--leak-soft);border:1px solid #e2b6a8;
+    border-radius:10px;padding:16px 20px;text-align:center}
+  .leaknote strong{color:var(--leak)}
+  .leakflag{display:inline-block;background:var(--leak);color:#fff;font-size:11px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border-radius:20px;margin-bottom:8px}
+
+  /* ---------- pattern cards ---------- */
+  .cards{display:grid;gap:20px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    box-shadow:0 1px 0 rgba(0,0,0,.02)}
+  .card-top{display:flex;align-items:flex-start;gap:16px;padding:22px 24px 6px}
+  .pnum{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--forest);color:var(--chart);
+    font-family:'Cormorant Garamond',serif;font-weight:700;font-size:22px;display:flex;align-items:center;justify-content:center}
+  .card-top h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:25px;color:var(--forest);line-height:1.12}
+  .card-body{padding:4px 24px 24px 82px}
+  .evidence{display:grid;gap:10px;margin:14px 0 18px}
+  .ev{border-left:3px solid var(--chart);padding:6px 0 6px 14px;background:var(--off);border-radius:0 6px 6px 0}
+  .ev .who{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .ev p{font-size:14.5px;font-style:italic;color:#3c4634;margin-top:2px}
+  .fix{display:flex;gap:10px;align-items:baseline;font-size:14.5px}
+  .fix .k{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--leak);flex:0 0 auto}
+
+  /* ---------- verdict ---------- */
+  .verdict{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .vc{border-radius:12px;padding:20px 18px;border:1px solid var(--line);background:#fff;text-align:center}
+  .vc .name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;margin-bottom:6px}
+  .vc .verdict-tag{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  .vc p{font-size:13px;color:var(--muted);margin-top:8px}
+  .vc.hot{background:var(--forest);border-color:var(--forest)}
+  .vc.hot .name{color:var(--off)}
+  .vc.hot .verdict-tag{color:var(--chart)}
+  .vc.hot p{color:#d6d9c9}
+  .vc.cool .verdict-tag{color:var(--muted)}
+  .verdict-line{margin-top:26px;background:var(--dark);color:var(--off);border-radius:12px;padding:24px 28px}
+  .verdict-line b{color:var(--chart)}
+
+  /* ---------- call timeline ---------- */
+  .flow{display:grid;gap:0;position:relative}
+  .phase{display:grid;grid-template-columns:120px 1fr;gap:0;border:1px solid var(--line);
+    background:#fff;border-bottom:none}
+  .phase:first-child{border-radius:12px 12px 0 0}
+  .phase:last-child{border-radius:0 0 12px 12px;border-bottom:1px solid var(--line)}
+  .phase .when{background:var(--sand);padding:20px 18px;border-right:1px solid var(--line);
+    display:flex;flex-direction:column;justify-content:center}
+  .phase .when .mins{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--forest);line-height:1}
+  .phase .when .of{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .phase .what{padding:20px 24px}
+  .phase .what h4{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--forest);margin-bottom:4px}
+  .phase .what p{font-size:14.5px;color:#3c4634}
+  .phase.close{border-color:var(--leak)}
+  .phase.close .when{background:var(--leak);border-right-color:var(--leak)}
+  .phase.close .when .mins{color:#fff}
+  .phase.close .when .of{color:#f2d9d0}
+  .phase.close .what h4{color:var(--leak)}
+  .phase.close .tag{display:inline-block;background:var(--leak);color:#fff;font-size:10.5px;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:8px}
+  .frame-note{margin-top:18px;font-size:14px;color:var(--muted);background:var(--chart);
+    background:rgba(214,217,139,.35);border-radius:10px;padding:14px 18px}
+  .frame-note b{color:var(--forest)}
+
+  /* ---------- offer cards ---------- */
+  .offers{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .offer{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px 24px;display:flex;flex-direction:column}
+  .offer.primary{border:2px solid var(--forest)}
+  .offer .badge{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    background:var(--sand);color:var(--forest);padding:4px 12px;border-radius:20px;margin-bottom:14px}
+  .offer.primary .badge{background:var(--forest);color:var(--chart)}
+  .offer h4{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--forest);line-height:1.1;margin-bottom:6px}
+  .offer .for{font-size:13px;color:var(--muted);margin-bottom:16px}
+  .offer ul{list-style:none;display:grid;gap:9px;margin-bottom:18px}
+  .offer li{font-size:14.5px;padding-left:22px;position:relative}
+  .offer li::before{content:"";position:absolute;left:0;top:9px;width:9px;height:9px;border-radius:50%;background:var(--chart);border:1px solid var(--forest)}
+  .offer .ask{margin-top:auto;padding-top:16px;border-top:1px dashed var(--line);font-size:14.5px}
+  .offer .ask b{color:var(--forest)}
+
+  /* ---------- survey ---------- */
+  .qintro{background:var(--dark);color:var(--off);border-radius:12px;padding:22px 26px;margin-bottom:26px;font-size:15px}
+  .qintro b{color:var(--chart)}
+  .qgrid{display:grid;gap:14px}
+  .q{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 22px;display:grid;
+    grid-template-columns:1fr auto;gap:14px;align-items:center}
+  .q .route{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--leak);margin-bottom:6px}
+  .q .qtext{font-size:15.5px;color:var(--ink)}
+  .q .qtext em{color:var(--muted);font-style:normal;display:block;font-size:13px;margin-top:4px}
+  .scale{display:flex;gap:5px;align-items:center}
+  .dot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);font-size:10px;
+    display:flex;align-items:center;justify-content:center;color:var(--muted)}
+  .dot.lo{border-color:var(--chart)}
+  .dot.hi{border-color:var(--leak);color:var(--leak);font-weight:700}
+  .scale .cap{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+  .routing{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px}
+  .routing h4{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--forest);margin-bottom:12px}
+  .route-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+  .route-row:last-child{border-bottom:none}
+  .route-row .score{flex:0 0 auto;background:var(--leak);color:#fff;font-size:11px;font-weight:700;
+    padding:4px 10px;border-radius:20px;letter-spacing:.06em}
+  .route-row .arrow{color:var(--muted);flex:0 0 auto}
+  .route-row .dest b{color:var(--forest)}
+  .consent{margin-top:16px;background:rgba(214,217,139,.35);border-radius:10px;padding:14px 18px;font-size:14px}
+  .consent b{color:var(--forest)}
+
+  /* ---------- checklist footer ---------- */
+  .done{padding:56px 0 40px;background:var(--sand);border-top:1px solid var(--line)}
+  .done h3{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--forest);margin-bottom:6px}
+  .done p.sub{color:var(--muted);margin-bottom:20px;font-size:15px}
+  .checkline{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .checkline:last-child{border-bottom:none}
+  .box{flex:0 0 auto;width:20px;height:20px;border-radius:5px;background:var(--forest);color:var(--chart);
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-top:2px}
+  .box.open{background:#fff;border:1.5px solid var(--muted);color:transparent}
+  .checkline .yours{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--leak);margin-left:6px}
+  footer{background:var(--dark);color:#aeb79b;text-align:center;padding:28px;font-size:12.5px;letter-spacing:.06em}
+
+  @media(max-width:720px){
+    .verdict{grid-template-columns:1fr 1fr}
+    .offers{grid-template-columns:1fr}
+    .card-body{padding-left:24px}
+    .q{grid-template-columns:1fr}
+    .scale{flex-wrap:wrap}
+  }
+  @media print{
+    body{background:#fff}
+    section{padding:34px 0;break-inside:avoid}
+    .masthead{padding:36px 0}
+    .card,.phase,.offer,.q{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Common Wealth Collective &nbsp;/&nbsp; Growth Plan with Luke</div>
+    <h1>Section A:<br>Fix the Funnel</h1>
+    <p>You are getting the right people onto calls. They love it, they ask for testimonials, and then nothing. This is the leak, and it is the one thing that changes your revenue the fastest. Here is what your two strategy calls actually revealed, and exactly how to rebuild the call so it closes.</p>
+    <div class="tag">Built from your calls with Jess Lane &amp; Jalisa &nbsp;&middot;&nbsp; Do this first</div>
+  </div>
+</header>
+
+<!-- 1. THE FUNNEL -->
+<section id="funnel">
+  <div class="wrap">
+    <div class="snum">The picture</div>
+    <h2 class="stitle">Where the money is leaking</h2>
+    <p class="slead">Your top of funnel is healthy. Your close is not. The drop from a great strategy call to a paying client is where every dollar is getting lost right now.</p>
+
+    <div class="funnel">
+      <div class="stage s1">
+        <span class="big">10 to 40</span>
+        <span class="lbl">Warm podcast guest leads per drop</span>
+        <span class="sub">Handed to you, already your ideal client</span>
+      </div>
+      <div class="stage s2">
+        <span class="big">30%</span>
+        <span class="lbl">Convert into a 90-minute strategy call</span>
+        <span class="sub">Strong number. This part works.</span>
+      </div>
+      <div class="stage s3">
+        <span class="leakflag">The leak</span>
+        <span class="big">0%</span>
+        <span class="lbl">Convert from the call into a retainer</span>
+      </div>
+    </div>
+
+    <div class="leaknote">
+      <strong>Read it plainly:</strong> more leads will not help until this last step is fixed. If you move that 0% to even 10%, you hit your 10K month without changing a single thing at the top.
+    </div>
+  </div>
+</section>
+
+<!-- 2. PATTERNS -->
+<section id="patterns">
+  <div class="wrap">
+    <div class="snum">The analysis</div>
+    <h2 class="stitle">Three patterns across both calls</h2>
+    <p class="slead">Same story in the Jess call and the Jalisa call. Both got a brilliant, complete plan. Neither got an offer.</p>
+
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-top">
+          <div class="pnum">1</div>
+          <h3>The offer never actually gets made</h3>
+        </div>
+        <div class="card-body">
+          <p>In both calls you closed with a roadmap and a soft "we can talk about support if you want." No specific package, no price, no clear next step, no ask. The call just ends warmly.</p>
+          <div class="evidence">
+            <div class="ev"><div class="who">Your close with Jess</div><p>"I'll have everything by the end of the week... if you're looking for more support, we can talk about what that looks like with retainer structure."</p></div>
+            <div class="ev"><div class="who">Your close with Jalisa</div><p>"I will have for you on Monday a full 90-day roadmap... tap me when you get to that stage."</p></div>
+          </div>
+          <div class="fix"><span class="k">The fix</span><span>End every call with one specific offer, one price, and one next step. Say the number out loud on the call.</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <div class="pnum">2</div>
+          <h3>You over-deliver, so there is nothing left to buy</h3>
+        </div>
+        <div class="card-body">
+          <p>Both women walked away with the full transformation for free: content pillars, power partner strategy, batching systems, the works. You closed the gap that a retainer is supposed to fill. Jess was ready to take it and run.</p>
+          <div class="evidence">
+            <div class="ev"><div class="who">Jess, mid-call</div><p>"I love the way that you think... there's so much potential, but I need the systems."</p></div>
+            <div class="ev"><div class="who">Luke's word for it</div><p>"Is 90 minutes too open-ended? Does it feel like free consulting?"</p></div>
+          </div>
+          <div class="fix"><span class="k">The fix</span><span>Give them the what and the why on the call. Position the how, the done-with-you execution, as the retainer.</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <div class="pnum">3</div>
+          <h3>One format for everyone, no matter where they are</h3>
+        </div>
+        <div class="card-body">
+          <p>Jess is high intent with a $6,500 program of her own and a clear systems need. Jalisa is early stage, overwhelmed, and finding her footing. Both got the same deep-strategy call. High-intent Jess was never closed, and early-stage Jalisa was never handed a right-sized entry point.</p>
+          <div class="evidence">
+            <div class="ev"><div class="who">Jalisa's core need</div><p>"How to sell myself, how to put myself out there... attracting clients is the biggest one of all."</p></div>
+            <div class="ev"><div class="who">Jess's core need</div><p>"Inbound leads, owned ecosystem, repeatable revenue... I'm lacking the systems and operations for sure."</p></div>
+          </div>
+          <div class="fix"><span class="k">The fix</span><span>Qualify before the call, then match the person to the right offer. Not everyone gets the same door (see Section A, part 3).</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 3. VERDICT -->
+<section id="verdict">
+  <div class="wrap">
+    <div class="snum">The diagnosis</div>
+    <h2 class="stitle">Is it the offer, the price, the timing, or the format?</h2>
+    <p class="slead">Luke asked you to name the real culprit. Here it is. It is not the price, because nobody ever got to a price.</p>
+
+    <div class="verdict">
+      <div class="vc hot"><div class="name">Structure</div><div class="verdict-tag">Primary cause</div><p>The call has no close built into it. It ends on a roadmap, not an ask.</p></div>
+      <div class="vc hot"><div class="name">The offer</div><div class="verdict-tag">Primary cause</div><p>There is no defined offer to make. It needs to exist before the call starts.</p></div>
+      <div class="vc cool"><div class="name">Timing</div><div class="verdict-tag">Secondary</div><p>The moment is fine. The ask simply never happens, so timing cannot land.</p></div>
+      <div class="vc cool"><div class="name">Price</div><div class="verdict-tag">Not the issue yet</div><p>Prospects never reach a number, so price cannot be what is stopping them.</p></div>
+    </div>
+
+    <div class="verdict-line">
+      <b>Bottom line:</b> This is a structure and offer problem, not a lead problem or a pricing problem. Build a real offer, build a close into the call, and the same calls you are already having start converting.
+    </div>
+  </div>
+</section>
+
+<!-- 4. REBUILT CALL -->
+<section id="rebuild">
+  <div class="wrap">
+    <div class="snum">The rebuild</div>
+    <h2 class="stitle">Your new 90-minute call structure</h2>
+    <p class="slead">Four phases, same warmth you already bring, with one difference: the close is now a real part of the call, not an afterthought.</p>
+
+    <div class="flow">
+      <div class="phase">
+        <div class="when"><div class="mins">10<span style="font-size:14px"> min</span></div><div class="of">Opening</div></div>
+        <div class="what"><h4>Reconnect and set the frame</h4><p>Warm catch-up, then set expectations: "We'll map your priorities today, and at the end I'll show you exactly how we can keep working together if it feels like a fit." You have now earned the right to make an offer later.</p></div>
+      </div>
+      <div class="phase">
+        <div class="when"><div class="mins">25<span style="font-size:14px"> min</span></div><div class="of">Discovery</div></div>
+        <div class="what"><h4>Their world, in their words</h4><p>Your business audit questions, the three pillars, the "what drains your battery" prompt. Listen for the one problem they keep circling back to. That problem is what your offer solves.</p></div>
+      </div>
+      <div class="phase">
+        <div class="when"><div class="mins">40<span style="font-size:14px"> min</span></div><div class="of">Value</div></div>
+        <div class="what"><h4>Give them the map, not the whole build</h4><p>Show them the strategy and the what and the why so they get a real win. Hold back the done-with-you execution. When you feel the urge to give away the full system, that is your signal that a retainer belongs here instead.</p></div>
+      </div>
+      <div class="phase close">
+        <div class="when"><div class="mins">15<span style="font-size:14px"> min</span></div><div class="of">The close</div></div>
+        <div class="what"><span class="tag">The part that was missing</span><h4>Make the specific offer</h4><p>"Here is what I'd recommend as your next step, here is what it includes, and here is the investment." Name the package. Name the price. Name the start. Then stop talking and let them answer.</p></div>
+      </div>
+    </div>
+
+    <div class="frame-note"><b>The one habit change:</b> record and transcribe your next call, and analyze it the same day with the prompt from your checklist. You will see the leak in real time and fix it faster than any strategy can.</div>
+  </div>
+</section>
+
+<!-- 5. THE OFFER -->
+<section id="offer">
+  <div class="wrap">
+    <div class="snum">The offer</div>
+    <h2 class="stitle">The exact thing you say at the close</h2>
+    <p class="slead">Two doors, so you always have a right-sized next step no matter who is in front of you. Pick the door based on how they qualified. Prices are yours to set as you test, so slot your numbers in.</p>
+
+    <div class="offers">
+      <div class="offer primary">
+        <span class="badge">For higher-intent, like Jess</span>
+        <h4>The Foundation Retainer</h4>
+        <div class="for">Ready now, has budget, clear pain point</div>
+        <ul>
+          <li>Three-month engagement, done with you</li>
+          <li>The system built and implemented, not just mapped</li>
+          <li>Weekly touchpoints and priority Slack access</li>
+          <li>Executive assistant placement through Camryn where it fits</li>
+        </ul>
+        <div class="ask"><b>The ask:</b> "Sign this week and your fourth month is on us." A reason to decide on the call, not later.</div>
+      </div>
+
+      <div class="offer">
+        <span class="badge">For earlier-stage, like Jalisa</span>
+        <h4>The Momentum Starter</h4>
+        <div class="for">Motivated but not ready for the full retainer</div>
+        <ul>
+          <li>A focused entry offer at a lower commitment</li>
+          <li>The 90-minute roadmap plus a set number of follow-ups</li>
+          <li>Slack support add-on to stay close between steps</li>
+          <li>A clear upgrade path into the Foundation Retainer</li>
+        </ul>
+        <div class="ask"><b>The ask:</b> "Let's get you started here, and when you outgrow it, we move you up." No one leaves empty-handed.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. QUALIFYING SURVEY -->
+<section id="survey">
+  <div class="wrap">
+    <div class="snum">Qualify first</div>
+    <h2 class="stitle">The post-podcast qualifying survey</h2>
+    <p class="slead">Four quick questions, camera off, right after you finish recording. Genuine curiosity, not a pitch. Each one maps to one of your four service areas and scores 1 to 10.</p>
+
+    <div class="qintro">Ask warmly: <b>"Before we wrap, do you mind if I ask you three or four quick things about where your business is right now?"</b> Score each answer 1 (totally handled) to 10 (biggest headache). The highest scores tell you which workshop and offer to route them toward.</div>
+
+    <div class="qgrid">
+      <div class="q">
+        <div>
+          <div class="route">Routes to &rarr; Internal Systems (Camryn)</div>
+          <div class="qtext">When you think about the behind-the-scenes of your business, your operations, tools, and handoffs, how smooth does it feel?<em>High score = systems are a mess and a stress</em></div>
+        </div>
+        <div class="scale"><span class="cap">Handled</span><span class="dot lo">1</span><span class="dot">4</span><span class="dot">7</span><span class="dot hi">10</span><span class="cap">Headache</span></div>
+      </div>
+
+      <div class="q">
+        <div>
+          <div class="route">Routes to &rarr; Podcast &amp; Long-Form Content</div>
+          <div class="qtext">How confident are you that your podcast or long-form content is actually bringing in leads?<em>High score = creating content but seeing no return</em></div>
+        </div>
+        <div class="scale"><span class="cap">Handled</span><span class="dot lo">1</span><span class="dot">4</span><span class="dot">7</span><span class="dot hi">10</span><span class="cap">Headache</span></div>
+      </div>
+
+      <div class="q">
+        <div>
+          <div class="route">Routes to &rarr; Speaking, Keynotes &amp; Pitching</div>
+          <div class="qtext">How ready do you feel to get on stages, pitch, or speak to bigger rooms?<em>High score = wants the spotlight but not sure how</em></div>
+        </div>
+        <div class="scale"><span class="cap">Handled</span><span class="dot lo">1</span><span class="dot">4</span><span class="dot">7</span><span class="dot hi">10</span><span class="cap">Headache</span></div>
+      </div>
+
+      <div class="q">
+        <div>
+          <div class="route">Routes to &rarr; Community Growth (core CWC)</div>
+          <div class="qtext">How strong is the community around your brand, people who would show up, refer, and buy without you chasing them?<em>High score = relying on cold outreach, no warm base</em></div>
+        </div>
+        <div class="scale"><span class="cap">Handled</span><span class="dot lo">1</span><span class="dot">4</span><span class="dot">7</span><span class="dot hi">10</span><span class="cap">Headache</span></div>
+      </div>
+    </div>
+
+    <div class="routing">
+      <h4>Then tag and route</h4>
+      <div class="route-row"><span class="score">Any 7 to 10</span><span class="arrow">&rarr;</span><span class="dest">Tag them by their highest area and invite them to <b>that workshop</b> as a guest. A warm, specific, free next step.</span></div>
+      <div class="route-row"><span class="score">Multiple 7+</span><span class="arrow">&rarr;</span><span class="dest">High fit across areas. This is your <b>90-minute strategy call</b> shortlist and your best retainer prospects.</span></div>
+      <div class="route-row"><span class="score">All under 5</span><span class="arrow">&rarr;</span><span class="dest">Not a fit right now. Keep them warm in the community, no pitch needed.</span></div>
+      <div class="consent"><b>Close with consent:</b> "Would it be okay if I follow up with a free workshop invite that fits what you just shared?" A yes puts them straight into the right list.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CHECKLIST STATUS -->
+<div class="done">
+  <div class="wrap">
+    <h3>Section A, checked off</h3>
+    <p class="sub">What this doc completed, and the few pieces that are yours to run.</p>
+
+    <div class="checkline"><span class="box">&#10003;</span><span>Pulled and analyzed both strategy call transcripts (Jess Lane, Jalisa)</span></div>
+    <div class="checkline"><span class="box">&#10003;</span><span>Documented the top 3 patterns across the calls</span></div>
+    <div class="checkline"><span class="box">&#10003;</span><span>Identified the real issue: structure and offer, not price or timing</span></div>
+    <div class="checkline"><span class="box">&#10003;</span><span>Rebuilt the call structure: opening, discovery, value, close</span></div>
+    <div class="checkline"><span class="box">&#10003;</span><span>Defined two specific offers with clear asks</span></div>
+    <div class="checkline"><span class="box">&#10003;</span><span>Wrote the 4-question qualifying survey with scoring and routing</span></div>
+    <div class="checkline"><span class="box open"></span><span>Practice the close out loud with someone before your next call <span class="yours">Yours</span></span></div>
+    <div class="checkline"><span class="box open"></span><span>Set your actual prices into the two offers <span class="yours">Yours</span></span></div>
+    <div class="checkline"><span class="box open"></span><span>Build the survey in Google Form or Typeform, or keep it as a verbal script <span class="yours">Yours</span></span></div>
+    <div class="checkline"><span class="box open"></span><span>Record, transcribe, and analyze your next 90-minute call the same day <span class="yours">Yours</span></span></div>
+  </div>
+</div>
+
+<footer>Common Wealth Collective &nbsp;&middot;&nbsp; Section A: Fix the Funnel &nbsp;&middot;&nbsp; Internal working doc</footer>
+
+</body>
+</html>
